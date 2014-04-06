@@ -65,5 +65,27 @@ The specific objects for each service can be accessed through the component as a
 
 ## Example
 
+* Add a job to the SQS queue
+
+		$this->Amazon->Sqs->sendMessage(array(
+			'QueueUrl' => Configure::read('SQS.queueUrl'),
+			'MessageBody' => json_encode(array('jobtype'=>'SendEmails', 'data'=>array('id' => 5)))
+		));
+
+* From a model or shell
+
+		if (!isset($this->Amazon)) {
+			App::import('Component', 'Amazonsdk.Amazon');
+			$collection = new ComponentCollection();
+			$Controller =& new Controller();
+			$this->Amazon = new AmazonComponent($collection);
+			$this->Amazon->initialize($Controller);
+		}
+		$this->Amazon->Sqs->sendMessage(array(
+			'QueueUrl' => Configure::read('SQS.queueUrl'),
+			'MessageBody' => json_encode(array('jobtype'=>'SendEmails', 'data'=>array('id' => 5)))
+		));
+
+
 ## Notes
 
