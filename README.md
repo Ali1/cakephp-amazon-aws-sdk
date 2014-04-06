@@ -1,13 +1,15 @@
-# Amazon Plugin for CakePHP 2.0+
+# Amazon SDK version 2 plugin for CakePHP 2.0+
 
-This plugin is a (*very*) thin veil over Amazon's [AWS SDK for PHP](http://aws.amazon.com/sdkforphp/) for use in CakePHP controllers.
-Forked from http://github.com/joebeeson/amazon for CakePHP 1.3+
+This plugin is a (*very*) thin veil over Amazon's [AWS SDK for PHP](https://github.com/aws/aws-sdk-php) for use in CakePHP controllers.
+Forked from many others but upgraded to support new sdk 2 and removed sdk Vendor from the plugin for a more composer-compatible installation.
+
+Warning: the new sdk is very different. Old code may no longer work.
 
 ## Installation
 
-* Download the plugin
+* Add to composer, this will also install the Amazon SDK for PHP as a dependency
 
-        $ cd /path/to/your/app/plugins && git clone git://github.com/mcallisto/cakephp_amazon_aws_sdk.git
+        "ali1/cakephp-amazon-aws-sdk": "dev-master"
 
 * Add the component to a controller
 
@@ -15,16 +17,19 @@ Forked from http://github.com/joebeeson/amazon for CakePHP 1.3+
 
 ## Configuration
 
-You must populate the following two lines in your `/app/Plugin/Amazonsdk/Config/amazon.php` file.
+You must add configuration to bootstrap.php.
 
-  		'key' => 'YOUR_KEY',
-  		'secret' => 'YOUR_SECRET'
+		Configure::write('Amazonsdk.credentials', array(
+			'key' => 'YOUR KEY',
+			'secret' => 'YOUR SECRET',
+			'region' => 'us-east-1'
+		));
 
 Don't forget to replace the placeholder text with your actual keys!
 
 ## Usage
 
-At this point you have access to all of the methods available from the AWS SDK. The library currently has support for the following services:
+At this point you have access to all of the methods available from the AWS SDK. The following is a small list. The full list can be found at (http://docs.aws.amazon.com/aws-sdk-php/latest/namespace-Aws.html).
 
 * Amazon CloudFront
 * Amazon CloudWatch
@@ -51,38 +56,14 @@ Not all of the methods for each service has been thoroughly tested. If you run i
 
 The specific objects for each service can be accessed through the component as a member of it. Here are some examples:
 
-* `$this->Amazon->SNS`
-* `$this->Amazon->AutoScale`
+* `$this->Amazon->Sns`
 * `$this->Amazon->CloudFront`
 * `$this->Amazon->CloudWatch`
-* `$this->Amazon->EC2`
-* `$this->Amazon->ELB`
-* `$this->Amazon->RDS`
-* `$this->Amazon->EMR`
-* `$this->Amazon->SDB`
-* `$this->Amazon->SQS`
+* `$this->Amazon->Ec2`
+* `$this->Amazon->ElasticBeanstalk`
+* `$this->Amazon->Sqs`
 
 ## Example
 
-To publish to the Simple Notification Service the method to use is called `publish` -- here is an example:
-
-		$this->Amazon->SNS->publish('arn:aws:sns:us-east-1:567053558973:foo', 'This is the message to publish');
-
-To lookup any EC2 instances, we can do the following:
-
-		$response = $this->Amazon->EC2->describe_instances();
-
-Lets say we wanted to upload a file to S3:
-
-		$this->Amazon->S3->create_object(
-			'our_bucket',
-			'filename.jpg',
-			array(
-				'fileUpload' => '/tmp/image.jpg',
-				'acl' => AmazonS3::ACL_PUBLIC
-			)
-		);
-
 ## Notes
 
-Almost all of the methods that can be performed against a service will return a `CFResponse` object. The plugin makes no attempt to translate this into anything other than an object since the response is directly generated from the API response. For more information on the `CFResponse` object [click here](http://docs.amazonwebservices.com/AWSSDKforPHP/latest/index.html#i=CFResponse)

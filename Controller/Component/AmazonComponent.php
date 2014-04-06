@@ -1,5 +1,6 @@
 <?php
-Configure::load('Amazonsdk.amazon');
+
+use Aws\Common\Aws;
 
 /**
  * AmazonComponent
@@ -30,12 +31,7 @@ class AmazonComponent extends Component {
    */
   public function initialize(Controller $controller) {
     // Handle loading our library firstly...
-    App::build(array('Vendor' => array(
-      APP.'Plugin'.DS.'Amazonsdk'.DS .'Vendor'.DS)
-    ));
-    App::import('Vendor', 'Amazon', array(
-      'file' => 'sdk-1.5.15'.DS.'sdk.class.php'
-    ));
+	  $this->Aws = Aws::factory(Configure::read('Amazonsdk.credentials'));
   }
 
   /**
@@ -48,40 +44,7 @@ class AmazonComponent extends Component {
    * @access public
    */
   public function __get($variable) {
-    // Build a class name.  (ex: SDB -> AmazonSDB)
-    $class = 'Amazon'.$variable;
-
-    // Create the service if class exists.
-    if (class_exists($class)) {
-      // Store away the requested class for future usage.
-      $this->$variable = $this->__createService($class);
-
-      // Return the class back to the caller
-      return $this->$variable;
-    }
-    return false;
+    $this->$variable = $this->Aws->get($variable);
+    return $this->$variable;
   }
-
-  /**
-   * Instantiates and returns a new instance of the requested `$class`
-   * object.
-   *
-   * @param string $class
-   * @return object
-   * @access private
-   */
-  private function __createService($class) {
-    $options = array(
-      'key' => Configure::read('Aws.key'),
-      'secret' => Configure::read('Aws.secret'),
-    );
-    if (Configure::read('Aws.certificate_authority') !== null) {
-      $options['certificate_authority'] = Configure::read('Aws.certificate_authority');
-    }
-    if (Configure::read('Aws.token') !== null) {
-      $options['token'] = Configure::read('Aws.token');
-    }
-    return new $class($options);
-  }
-
 }
