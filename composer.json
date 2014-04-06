@@ -1,0 +1,16 @@
+{
+	"name": "ali1/cakephp-amazon-aws-sdk",
+    "description" : "A CakePHP component to use the Amazon SDK for PHP",
+    "license" : "WTFPL",
+    "type" : "cakephp-plugin",
+    "authors": [
+    ],
+    "require" : {
+      "aws/aws-sdk-php": "1.5.*"
+    },
+    "require-dev" : {
+    },
+    "extra": {
+    	"installer-name" : "Amazonsdk"
+    }
+}
