@@ -6,7 +6,7 @@
     "authors": [
     ],
     "require" : {
-        "composer/installers": "*"
+        "composer/installers": "*",
         "aws/aws-sdk-php": "2.*"
     },
     "require-dev" : {
