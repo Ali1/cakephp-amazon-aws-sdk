@@ -1,5 +1,6 @@
 <?php
 
+App::uses('Component', 'Controller');
 use Aws\Common\Aws;
 
 /**
